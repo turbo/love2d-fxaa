@@ -1,0 +1,16 @@
+local image = love.graphics.newImage('download.png')
+local shader = love.graphics.newShader('fxaa.glsl')
+local canvas = love.graphics.newCanvas(512, 512)
+love.load = function()
+  love.window.setMode(1024, 512, { })
+  return love.window.setTitle("Mobile FXAA (by NVIDIA/Timothy L. & Meincraft/Armin Ronacher) - Left: FXAA on, Right: Original")
+end
+love.draw = function()
+  love.graphics.setCanvas(canvas)
+  love.graphics.setShader(shader)
+  love.graphics.draw(image, 0, 0)
+  love.graphics.setShader()
+  love.graphics.setCanvas()
+  love.graphics.draw(canvas, 0, 0)
+  return love.graphics.draw(image, 512, 0)
+end
