@@ -54,6 +54,12 @@ do
       end
       self.sharpen = sharpen
       self.shader_fxaa = love.graphics.newShader('fxaa.glsl')
+      do
+        local _with_0 = self.shader_fxaa
+        _with_0:send('fxaa_reduce_min', (1.0 / 128.0))
+        _with_0:send('fxaa_reduce_mul', (1.0 / 8.0))
+        _with_0:send('fxaa_span_max', 8.0)
+      end
       self.shader_sharpen = love.graphics.newShader('sharpen.glsl')
       self.layers = { }
       for stage = 1, stages do
@@ -81,7 +87,7 @@ love.load = function()
   love.window.setMode(1024, 1024, {
     borderless = true
   })
-  return love.window.setTitle("Mobile FXAA (by NVIDIA/Timothy L. & Meincraft/Armin Ronacher) - Left: FXAA on, Right: Original")
+  return love.window.setTitle("Mobile FXAA (by NVIDIA/Timothy L. & Meincraft/Armin Ronacher)")
 end
 local cv = FXAACanvas(512, 512)
 local cv2 = FXAACanvas(512, 512, 2)

@@ -1,9 +1,13 @@
 image = love.graphics.newImage('download.png')
 
 class FXAACanvas
-
-  new: (width, height, stages = 1, @sharpen = 0) =>
+  new: (width, height, stages = 1, @sharpen = 0, reduce_min = 1/128, reduce_mul = 1/8, span_max = 8) =>
     @shader_fxaa = love.graphics.newShader('fxaa.glsl')
+    with @shader_fxaa
+      \send('fxaa_reduce_min', reduce_min)
+      \send('fxaa_reduce_mul', reduce_mul)
+      \send('fxaa_span_max', span_max)
+
     @shader_sharpen = love.graphics.newShader('sharpen.glsl')
 
     @layers = { }
@@ -53,7 +57,7 @@ love.load = ->
     -- vsync: false
   })
 
-  love.window.setTitle("Mobile FXAA (by NVIDIA/Timothy L. & Meincraft/Armin Ronacher) - Left: FXAA on, Right: Original")
+  love.window.setTitle("Mobile FXAA (by NVIDIA/Timothy L. & Meincraft/Armin Ronacher)")
 
 
 cv = FXAACanvas(512, 512)

@@ -56,15 +56,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * EVEN IF NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#ifndef FXAA_REDUCE_MIN
-  #define FXAA_REDUCE_MIN   (1.0/ 128.0)
-#endif
-#ifndef FXAA_REDUCE_MUL
-  #define FXAA_REDUCE_MUL   (1.0 / 8.0)
-#endif
-#ifndef FXAA_SPAN_MAX
-  #define FXAA_SPAN_MAX     8.0
-#endif
+// #ifndef fxaa_reduce_min
+//   #define fxaa_reduce_min   (1.0/ 128.0)
+// #endif
+// #ifndef fxaa_reduce_mul
+//   #define fxaa_reduce_mul   (1.0 / 8.0)
+// #endif
+// #ifndef fxaa_span_max
+//   #define fxaa_span_max     8.0
+// #endif
+
+uniform float fxaa_reduce_min;
+uniform float fxaa_reduce_mul;
+uniform float fxaa_span_max;
 
 varying vec2 v_rgbNW;
 varying vec2 v_rgbNE;
@@ -142,11 +146,11 @@ vec4 fxaa(
   dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
   
   float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) *
-                        (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+                        (0.25 * fxaa_reduce_mul), fxaa_reduce_min);
   
   float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
-  dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
-            max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
+  dir = min(vec2(fxaa_span_max, fxaa_span_max),
+            max(vec2(-fxaa_span_max, -fxaa_span_max),
             dir * rcpDirMin)) * inverseVP;
   
   vec3 rgbA = 0.5 * (
